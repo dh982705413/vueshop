@@ -72,14 +72,21 @@ export default {
             message: '登录失败'
           })
         }
-        this.$message.success({
-          showClose: true,
-          message: '登录成功'
-        })
-        const { data: res } = await this.$http.post('login', this.loginForm)
-        if (res.meta.status !== 200) return
-        window.sessionStorage.setItem('token', res.data.token)
-        this.$router.push('/home')
+        try {
+          const { data: res } = await this.$http.post('login', this.loginForm)
+          if (res.meta.status !== 200) return
+          this.$message.success({
+            showClose: true,
+            message: '登录成功'
+          })
+          window.sessionStorage.setItem('token', res.data.token)
+          this.$router.push('/home')
+        } catch (e) {
+          return this.$message.error({
+            showClose: true,
+            message: '登录失败，服务器连接超时'
+          })
+        }
       })
     }
   }
