@@ -25,9 +25,13 @@ import {
   Dialog,
   MessageBox,
   Tag,
-  tree
+  tree,
+  Select,
+  Option
 } from 'element-ui'
 
+Vue.use(Option)
+Vue.use(Select)
 Vue.use(Button)
 Vue.use(Form)
 Vue.use(FormItem)

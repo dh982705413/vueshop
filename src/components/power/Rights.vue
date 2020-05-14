@@ -23,13 +23,13 @@
       </el-table>
 
       <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="paginations.page_index"
-        :page-sizes="paginations.page_sizes"
-        :page-size="paginations.page_size"
-        :layout="paginations.layout"
-        :total="paginations.total"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="paginations.page_index"
+              :page-sizes="paginations.page_sizes"
+              :page-size="paginations.page_size"
+              :layout="paginations.layout"
+              :total="paginations.total"
       ></el-pagination>
     </el-card>
   </div>
@@ -37,11 +37,11 @@
 
 <script>
 export default {
-  created() {
+  created () {
     this.getRightList()
   },
   name: 'Rights',
-  data() {
+  data () {
     return {
       showList: [],
       rightList: [],
@@ -55,13 +55,13 @@ export default {
     }
   },
   methods: {
-    async getRightList() {
+    async getRightList () {
       const { data: res } = await this.$http.get('rights/list')
       if (res.meta.status !== 200) return this.$message.error('获取权限列表失败')
       this.rightList = res.data
       this.setPaginations()
     },
-    setPaginations() {
+    setPaginations () {
       this.paginations.total = this.rightList.length
       this.paginations.page_index = 1
       this.paginations.page_size = 5
@@ -71,7 +71,7 @@ export default {
       })
     },
     // eslint-disable-next-line camelcase
-    handleSizeChange(page_size) {
+    handleSizeChange (page_size) {
       this.paginations.page_index = 1
       // eslint-disable-next-line camelcase
       this.paginations.page_size = page_size
@@ -80,7 +80,7 @@ export default {
         return index < page_size
       })
     },
-    handleCurrentChange(page) {
+    handleCurrentChange (page) {
       const index = this.paginations.page_size * (page - 1)
       const allData = this.paginations.page_size * page
       const tablist = []

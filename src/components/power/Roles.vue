@@ -17,29 +17,33 @@
       <el-table :data="rolelist" border stripe>
         <el-table-column type="expand">
           <template slot-scope="scope">
-            <el-row v-for="(item1, i1) in scope.row.children" :key="item1.id" :class="['bdbottom', i1 === 0 ? 'bdtop' : '', 'vcenter']">
+            <el-row v-for="(item1, i1) in scope.row.children" :key="item1.id"
+                    :class="['bdbottom', i1 === 0 ? 'bdtop' : '', 'vcenter']">
               <!--                            一级权限-->
               <el-col :span="5">
-                <el-tag closable @close="removeRightById(scope.row, item1.id)"> {{ item1.authName }} </el-tag>
+                <el-tag closable @close="removeRightById(scope.row, item1.id)"> {{ item1.authName }}
+                </el-tag>
                 <i
-                  class=" el-icon-caret-right
+                        class=" el-icon-caret-right
                                 "
                 ></i>
               </el-col>
               <!--                            二级权限-->
               <el-col :span="19">
-                <el-row v-for="(item2, i2) in item1.children" :key="item2.id" :class="[i2 === 0 ? '' : 'bdtop', 'vcenter']">
+                <el-row v-for="(item2, i2) in item1.children" :key="item2.id"
+                        :class="[i2 === 0 ? '' : 'bdtop', 'vcenter']">
                   <el-col :span="6">
                     <el-tag type="success" closable @close="removeRightById(scope.row, item2.id)">
                       {{ item2.authName }}
                     </el-tag>
                     <i
-                      class=" el-icon-caret-right
+                            class=" el-icon-caret-right
                                         "
                     ></i>
                   </el-col>
                   <el-col :span="18">
-                    <el-tag v-for="item3 in item2.children" :key="item3.id" type="warning" closable @close="removeRightById(scope.row, item3.id)">
+                    <el-tag v-for="item3 in item2.children" :key="item3.id" type="warning" closable
+                            @close="removeRightById(scope.row, item3.id)">
                       {{ item3.authName }}
                     </el-tag>
                   </el-col>
@@ -57,10 +61,12 @@
             <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditRole(scope.row.id)">
               编辑
             </el-button>
-            <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeRoleById(scope.row.id)">
+            <el-button type="danger" icon="el-icon-delete" size="mini"
+                       @click="removeRoleById(scope.row.id)">
               删除
             </el-button>
-            <el-button type="warning" icon="el-icon-setting" size="mini" @click="showSetRightDialog(scope.row)">
+            <el-button type="warning" icon="el-icon-setting" size="mini"
+                       @click="showSetRightDialog(scope.row)">
               分配权限
             </el-button>
           </template>
@@ -99,7 +105,8 @@
     </el-dialog>
     <!--        分配角色弹出框-->
     <el-dialog title="提示" :visible.sync="setRightDialogVisible" width="30%">
-      <el-tree :data="rightslist" :props="treeProps" show-checkbox node-key="id" default-expand-all :default-checked-keys="defKeys" ref="treeRef"></el-tree>
+      <el-tree :data="rightslist" :props="treeProps" show-checkbox node-key="id" default-expand-all
+               :default-checked-keys="defKeys" ref="treeRef"></el-tree>
       <span slot="footer" class="dialog-footer">
         <el-button @click="setRightDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="allotRights">确 定</el-button>
@@ -110,11 +117,11 @@
 
 <script>
 export default {
-  created() {
+  created () {
     this.getRolsList()
   },
   name: 'Roles',
-  data() {
+  data () {
     return {
       defKeys: [],
       roleId: '',
@@ -195,15 +202,15 @@ export default {
     }
   },
   methods: {
-    async getRolsList() {
+    async getRolsList () {
       const { data: res } = await this.$http.get('roles')
       if (res.meta.status !== 200) return this.$message.error('获取角色失败')
       this.rolelist = res.data
     },
-    addRoleClose() {
+    addRoleClose () {
       this.$refs.addRolesFormRef.resetFields()
     },
-    addRoles() {
+    addRoles () {
       this.$refs.addRolesFormRef.validate(async valid => {
         if (!valid) return this.$message.error('表单验证错误')
         const { data: res } = await this.$http.post('roles', this.addRolesForm)
@@ -213,16 +220,16 @@ export default {
         this.$message.success('添加角色成功')
       })
     },
-    editRoleClose() {
+    editRoleClose () {
       this.$refs.editRoleFormRef.resetFields()
     },
-    async showEditRole(id) {
+    async showEditRole (id) {
       const { data: res } = await this.$http.get('roles/' + id)
       if (res.meta.status !== 200) return this.$message.error('角色信息查询失败')
       this.editRoleForm = res.data
       this.editRoleDialogVisible = true
     },
-    editRole() {
+    editRole () {
       this.$refs.editRoleFormRef.validate(async valid => {
         if (!valid) return this.$message.error('角色信息不符合规则')
         const { data: res } = await this.$http.put('roles/' + this.editRoleForm.roleId, {
@@ -235,8 +242,8 @@ export default {
         this.editRoleDialogVisible = false
       })
     },
-    async removeRoleById(id) {
-      const confirm = await this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+    async removeRoleById (id) {
+      const confirm = await this.$confirm('此操作将永久删除该角色, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -247,7 +254,7 @@ export default {
       this.$message.success('删除角色成功')
       this.getRolsList()
     },
-    async removeRightById(role, rightId) {
+    async removeRightById (role, rightId) {
       //  弹框提示用户是否要删除
       const confirm = await this.$confirm('此操作将永久删除该权限, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -260,7 +267,7 @@ export default {
       this.$message.success('删除权限成功')
       role.children = res.data
     },
-    async showSetRightDialog(role) {
+    async showSetRightDialog (role) {
       this.roleId = role.id
       const { data: res } = await this.$http.get('rights/tree')
       if (res.meta.status !== 200) return this.$message.error('获取权限数据失败')
@@ -269,13 +276,13 @@ export default {
       this.getLeafKeys(role, this.defKeys)
       this.setRightDialogVisible = true
     },
-    getLeafKeys(node, arr) {
+    getLeafKeys (node, arr) {
       if (!node.children) return arr.push(node.id)
       node.children.forEach(item => {
         this.getLeafKeys(item, arr)
       })
     },
-    async allotRights() {
+    async allotRights () {
       const keys = [...this.$refs.treeRef.getCheckedKeys(), ...this.$refs.treeRef.getHalfCheckedKeys()]
       const idStr = keys.join(',')
       const { data: res } = await this.$http.post(`roles/${this.roleId}/rights`, { rids: idStr })
@@ -289,15 +296,15 @@ export default {
 </script>
 
 <style scoped>
-.el-tag {
-  margin: 7px;
-}
+  .el-tag {
+    margin: 7px;
+  }
 
-.bdtop {
-  border-top: 1px solid #eee;
-}
+  .bdtop {
+    border-top: 1px solid #eee;
+  }
 
-.bdbottom {
-  border-bottom: 1px solid #eee;
-}
+  .bdbottom {
+    border-bottom: 1px solid #eee;
+  }
 </style>
